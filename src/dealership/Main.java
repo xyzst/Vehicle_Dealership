@@ -58,23 +58,22 @@ public class Main {
 
         switch (option){
             case SHOW_EXISTING_CAR_RECORDS:
-                //FIXME
-                //FIXME
+                //FIXME -- need funct
                 break;
             case ADD_NEW_CAR:
-                //FIXME
+                //FIXME -- need funct
                 break;
             case DELETE_CAR:
-                //FIXME
+                //FIXME -- need funct
                 break;
             case SEARCH_FOR_CAR_VIN:
-
+                //FIXME -- need funct
                 break;
             case SHOW_LIST_CARS_RANGE:
-
+                //FIXME -- need funct
                 break;
             case EXIT_PROGRAM:
-
+                //FIXME -- need funct
                 break;
         }
     }
