@@ -18,41 +18,32 @@ public class Main {
                              EXIT_PROGRAM = 6;
 
     /**
-     * FIXME -- need description of method Main
-     *
-     * @param  args   a sample parameter for a method
-     */
-    public static void main (String[] args) {
-        displayMenu();
-        selectOption();
-    }
-
-    /**
      * FIXME -- need description of method displayMenu
      *
      */
-    private static void displayMenu(){
+    private void displayMenu(){
         System.out.print("\n"+SHOW_EXISTING_CAR_RECORDS+". Show all existing car records in the database (in any order)." +
-                         "\n"+ADD_NEW_CAR+". Add a new car record to the database." +
-                         "\n"+DELETE_CAR+". Delete a car record from a database." +
-                         "\n"+SEARCH_FOR_CAR_VIN+". Search for a car (given its VIN)." +
-                         "\n"+SHOW_LIST_CARS_RANGE+". Show a list of cars within a given price range." +
-                         "\n"+EXIT_PROGRAM+". Exit program.\n"+
-                         "\nPlease select an option between "+SHOW_EXISTING_CAR_RECORDS+" and "+EXIT_PROGRAM+":");
+                "\n"+ADD_NEW_CAR+". Add a new car record to the database." +
+                "\n"+DELETE_CAR+". Delete a car record from a database." +
+                "\n"+SEARCH_FOR_CAR_VIN+". Search for a car (given its VIN)." +
+                "\n"+SHOW_LIST_CARS_RANGE+". Show a list of cars within a given price range." +
+                "\n"+EXIT_PROGRAM+". Exit program.\n"+
+                "\nPlease select an option between "+SHOW_EXISTING_CAR_RECORDS+" and "+EXIT_PROGRAM+":");
     }
 
     /**
      * FIXME -- need description of method selectOption
      *
      */
-    private static void selectOption(){
+    private void selectOption(){
         Scanner sc = new Scanner(System.in);
+        database db = new database;
 
         int option = sc.nextInt();
 
         while (option < SHOW_EXISTING_CAR_RECORDS || option > EXIT_PROGRAM){ // FIXME -- insert exception handling??
             System.out.print("\nYour selection ("+option+") is an invalid option." +
-                             "\nPlease try again: ");
+                    "\nPlease try again: ");
             option = sc.nextInt();
         }
 
@@ -62,6 +53,8 @@ public class Main {
                 break;
             case ADD_NEW_CAR:
                 //FIXME -- need funct
+                boolean test = db.AddNewCar();
+
                 break;
             case DELETE_CAR:
                 //FIXME -- need funct
@@ -76,5 +69,18 @@ public class Main {
                 //FIXME -- need funct
                 break;
         }
+    }
+
+    /**
+     * FIXME -- need description of method Main
+     *
+     * @param  args   a sample parameter for a method
+     */
+    public static void main (String[] args) {
+        Main primary = new Main();
+
+        primary.displayMenu();
+        primary.selectOption();
+
     }
 }
