@@ -5,7 +5,7 @@ package dealership;
  *
  */
 public class database {
-    public boolean AddNewCar (){
+    public boolean AddNewCar (){ // FIXME -- revise
         //TEST
         return false;
     }
