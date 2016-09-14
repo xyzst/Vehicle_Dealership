@@ -58,7 +58,7 @@ public class Main {
 
         switch (option){
             case SHOW_EXISTING_CAR_RECORDS:
-                // FIXME
+                //FIXME
                 //FIXME
                 break;
             case ADD_NEW_CAR:
