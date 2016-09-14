@@ -65,7 +65,7 @@ public class Main {
                 //FIXME
                 break;
             case DELETE_CAR:
-
+                //FIXME
                 break;
             case SEARCH_FOR_CAR_VIN:
 
