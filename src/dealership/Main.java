@@ -1,6 +1,9 @@
 package dealership;
 
+import java.io.IOException;
 import java.util.Scanner;
+//import java.io.FileReader;
+//import java.io.FileWriter;
 
 /**
  * FIXME -- need description of class Main
@@ -37,7 +40,7 @@ public class Main {
      */
     private void selectOption(){
         Scanner sc = new Scanner(System.in);
-        database db = new database;
+        database db = new database();
 
         int option = sc.nextInt();
 
@@ -53,7 +56,6 @@ public class Main {
                 break;
             case ADD_NEW_CAR:
                 //FIXME -- need funct
-                boolean test = db.AddNewCar();
 
                 break;
             case DELETE_CAR:
@@ -76,11 +78,14 @@ public class Main {
      *
      * @param  args   a sample parameter for a method
      */
-    public static void main (String[] args) {
-        Main primary = new Main();
+    public static void main (String[] args) throws IOException {
+        Main main = new Main();
+        database db = new database();
 
-        primary.displayMenu();
-        primary.selectOption();
+        db.importVehicleData();
+
+        main.displayMenu();
+        main.selectOption();
 
     }
 }
