@@ -1,7 +1,5 @@
 package dealership;
 
-//import java.util.ArrayList;
-
 public class Car {
     private String VIN,
                    make,
@@ -11,6 +9,10 @@ public class Car {
                 mileage;
 
     private float price;
+
+    Car(){
+
+    }
 
     /**
      * FIXME -- insert description
