@@ -56,6 +56,10 @@ public class Car {
         this.price = price;
     }
 
+    public String getVIN (){
+        return this.VIN;
+    }
+
 
 
 }
