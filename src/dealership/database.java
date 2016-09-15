@@ -32,7 +32,7 @@ public class database {
             String line;
             String[] words;
 
-            while (source.hasNextLine()){
+            while (source.hasNextLine()) {
                 Car data = new Car(); // FIXME -- loop is creating a new Car object every time but it works!
                 line = source.nextLine();
                 words = line.split(" ");
@@ -50,7 +50,7 @@ public class database {
             ex.printStackTrace();
             System.out.println("\nERROR: \"cars.txt\" does NOT exist!");
         }
-        finally{
+        finally {
             if (source != null){
                 source.close();
             }

@@ -1,9 +1,8 @@
 package dealership;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
-//import java.io.FileReader;
-//import java.io.FileWriter;
 
 /**
  * FIXME -- need description of class Main
@@ -81,8 +80,9 @@ public class Main {
     public static void main (String[] args) throws IOException {
         Main main = new Main();
         database db = new database();
+        ArrayList<Car> inventory = new ArrayList<Car>();
 
-        db.importVehicleData();
+        inventory = db.importVehicleData();
 
         main.displayMenu();
         main.selectOption();
