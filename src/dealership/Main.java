@@ -1,9 +1,8 @@
 package dealership;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
-//import java.io.FileReader;
-//import java.io.FileWriter;
 
 /**
  * FIXME -- need description of class Main
@@ -19,7 +18,8 @@ public class Main {
                              SEARCH_FOR_CAR_VIN = 4,
                              SHOW_LIST_CARS_RANGE = 5,
                              EXIT_PROGRAM = 6;
-
+    private static database db = new database();
+    private static Main main = new Main();
     /**
      * FIXME -- need description of method displayMenu
      *
@@ -38,11 +38,12 @@ public class Main {
      * FIXME -- need description of method selectOption
      *
      */
-    private void selectOption(){
+    private boolean selectOption(){
         Scanner sc = new Scanner(System.in);
-        database db = new database();
 
         int option = sc.nextInt();
+        boolean exit = false;
+        String query;
 
         while (option < SHOW_EXISTING_CAR_RECORDS || option > EXIT_PROGRAM){ // FIXME -- insert exception handling??
             System.out.print("\nYour selection ("+option+") is an invalid option." +
@@ -52,25 +53,35 @@ public class Main {
 
         switch (option){
             case SHOW_EXISTING_CAR_RECORDS:
-                //FIXME -- need funct
+                db.displayInventory();
+                exit = false;
                 break;
             case ADD_NEW_CAR:
-                //FIXME -- need funct
-
+                db.addNewVehicle();
+                exit = false;
                 break;
             case DELETE_CAR:
-                //FIXME -- need funct
+                db.delByVIN();
+                exit = false;
                 break;
             case SEARCH_FOR_CAR_VIN:
-                //FIXME -- need funct
+                System.out.println("Please enter the 5 character VIN (Vehicle Identification Number) of the vehicle:");
+                query = sc.nextLine();
+
+                if (db.vehicleSearchByVIN(query)){
+                    //FIXME -- query user if they would like to search for another vehicle?
+                }
+                exit = false;
                 break;
             case SHOW_LIST_CARS_RANGE:
-                //FIXME -- need funct
+                db.priceRangeSearch();
+                exit = false;
                 break;
             case EXIT_PROGRAM:
-                //FIXME -- need funct
+                exit = true;
                 break;
         }
+        return exit;
     }
 
     /**
@@ -78,14 +89,16 @@ public class Main {
      *
      * @param  args   a sample parameter for a method
      */
-    public static void main (String[] args) throws IOException {
-        Main main = new Main();
-        database db = new database();
+    public static void main (String[] args) throws IOException, Exception {
+        boolean leave;
 
         db.importVehicleData();
 
-        main.displayMenu();
-        main.selectOption();
+        do {
+            main.displayMenu();
+            leave = main.selectOption();
+        } while (!leave);
 
+        db.exportArrayList2File();
     }
 }
