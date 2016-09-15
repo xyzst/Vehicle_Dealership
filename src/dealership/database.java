@@ -11,19 +11,18 @@ import java.util.ArrayList;
  *
  */
 public class database {
+    private static final int SIZE = 10;
 
     /**
      * FIXME -- need description
      */
-    public void importVehicleData() throws IOException {
+    public ArrayList<Car> importVehicleData() throws IOException {
         Scanner fIn = null;
         Car data = new Car();
+        ArrayList<Car> temporary = new ArrayList<Car>(SIZE);
 
         try {
-            fIn = new Scanner(new FileReader("cars.txt")); // FIXME -- left off here
-
-
-
+            fIn = new Scanner(new FileReader("cars.txt"));
 
 
 
@@ -38,5 +37,7 @@ public class database {
                 fIn.close();
             }
         }
+
+        return temporary;
     }
 }
