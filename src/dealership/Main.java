@@ -89,7 +89,7 @@ public class Main {
      *
      * @param  args   a sample parameter for a method
      */
-    public static void main (String[] args) throws IOException {
+    public static void main (String[] args) throws IOException, Exception {
         boolean leave;
 
         db.importVehicleData();
@@ -99,6 +99,6 @@ public class Main {
             leave = main.selectOption();
         } while (!leave);
 
-        //FIXME -- need to call method exportVehicleData
+        db.exportArrayList2File();
     }
 }

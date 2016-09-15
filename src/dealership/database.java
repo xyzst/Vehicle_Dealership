@@ -1,6 +1,6 @@
 package dealership;
 
-import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
@@ -55,6 +55,22 @@ public class database {
             }
         }
         return vehicle_db;
+    }
+
+    /**
+     * FIXME -- add documentation to exportArrayList2File
+     */
+    public void exportArrayList2File() throws Exception {
+        PrintWriter fOut = new PrintWriter(FILE_PATH);
+
+        for (int i = 0; i < vehicle_db.size(); ++i) {
+            fOut.println(""+vehicle_db.get(i).getVIN()+" "+vehicle_db.get(i).getMake()+" " +
+                    ""+vehicle_db.get(i).getModel()+" "+vehicle_db.get(i).getYear()+" " +
+                    ""+vehicle_db.get(i).getMileage()+" "+vehicle_db.get(i).getPrice()+"");
+        }
+
+        fOut.close();
+        System.out.println("\nGoodbye!");
     }
 
     /**
