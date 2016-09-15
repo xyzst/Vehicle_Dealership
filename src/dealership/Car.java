@@ -10,6 +10,10 @@ public class Car {
 
     private float price;
 
+    Car(){
+
+    }
+
     /**
      * FIXME -- insert description
      * @param VIN

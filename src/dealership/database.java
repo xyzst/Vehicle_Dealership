@@ -11,16 +11,21 @@ import java.util.ArrayList;
  *
  */
 public class database {
+
     /**
      * FIXME -- need description
      */
     public void importVehicleData() throws IOException {
         Scanner fIn = null;
+        Car data = new Car();
 
         try {
-            fIn = new Scanner(new FileReader("cars.txt"));
+            fIn = new Scanner(new FileReader("cars.txt")); // FIXME -- left off here
 
-            
+
+
+
+
 
 
         }
