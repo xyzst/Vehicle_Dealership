@@ -28,12 +28,11 @@ public class database {
         Scanner source = null;
         try {
             source = new Scanner(new FileReader(FILE_PATH));
-            //Car data = new Car();
             String line;
             String[] words;
 
             while (source.hasNextLine()) {
-                Car data = new Car(); // FIXME -- loop is creating a new Car object every time but it works!
+                Car data = new Car();
                 line = source.nextLine();
                 words = line.split(" ");
 
@@ -63,8 +62,14 @@ public class database {
      */
     public void displayInventory (){
         System.out.print("\n");
-        for (int i = 0; i < vehicle_db.size(); ++i){ // FIXME -- need to continue displaying rest of data and making it pretty
-            System.out.println(vehicle_db.get(i).getVIN());
+
+        if (vehicle_db.isEmpty()){
+            System.out.println("The vehicle inventory is empty.");
+        }
+        else {
+            for (int i = 0; i < vehicle_db.size(); ++i) { // FIXME -- need to continue displaying rest of data and making it pretty
+                System.out.println(vehicle_db.get(i).getVIN());
+            }
         }
     }
 
@@ -83,7 +88,7 @@ public class database {
                 negative_value;
 
         do {
-            System.out.println("Please enter the 5 digit VIN (Vehicle Identification Number) of the vehicle:");
+            System.out.println("Please enter the 5 character VIN (Vehicle Identification Number) of the vehicle:");
             query_str = in.nextLine();
 
             if (query_str.length() > 5 || query_str.length() < 5) { //FIXME - need to get rid of literal
@@ -94,7 +99,7 @@ public class database {
                 too_long = false;
             }
         } while (too_long);
-        // FIXME -- could reuse VIN search code here
+        // FIXME -- could reuse VIN search code here??
         temp.setVIN(query_str.toUpperCase());
 
         System.out.println("Please enter the make of the vehicle (eg, Toyota, Honda, Ford ...):");
@@ -150,4 +155,118 @@ public class database {
                            "Model: "+temp.getModel()+", Year: "+temp.getYear()+", Mileage: "+temp.getMileage()+", " +
                            "Price: $"+temp.getPrice()+") has been successfully added to the inventory list!");
     }
+
+    /**
+     * FIXME -- insert documentation
+     */
+    public void delByVIN () {
+        Scanner in = new Scanner(System.in);
+        String query;
+        boolean found = false,
+                too_long;
+
+        System.out.println("Please enter the VIN of the vehicle you wish to remove:");
+        query = in.nextLine();
+
+        do {
+            if (query.length() > 5 || query.length() < 5) { //FIXME - need to get rid of literal
+                System.out.println("ERROR: Invalid VIN entered, please try again...");
+                too_long = true;
+            } else {
+                too_long = false;
+            }
+        } while (too_long);
+
+        for (int i = 0; i < vehicle_db.size(); ++i) {
+             if (query.equalsIgnoreCase(vehicle_db.get(i).getVIN())){
+                 vehicle_db.remove(i);
+                 found = true;
+                 break;
+             }
+             else {
+                 found = false;
+             }
+        }
+
+        if (found) {
+            System.out.println("Vehicle has been successfully removed!");
+        }
+        else {
+            System.out.println("Vehicle not found in the inventory list.");
+        }
+    }
+
+    /**
+     * FIXME -- insert description for vehicleSearchByVIN
+     */
+    public boolean vehicleSearchByVIN (String VIN) {
+        boolean doesExist = false;
+        int index;
+
+        for (int i = 0; i < vehicle_db.size(); ++i) {
+            if (VIN.equalsIgnoreCase(vehicle_db.get(i).getVIN())){
+                doesExist = true;
+                index = i;
+                break;
+            }
+            else {
+                doesExist = false;
+            }
+        }
+
+        if (doesExist) {
+            System.out.println(""+VIN+" does not exist in the vehicle inventory.");
+        }
+        else{
+            //FIXME -- insert details of vehicle found here (use index variable)...
+        }
+        return doesExist;
+    }
+
+    /**
+     * FIXME -- insert description for priceSearch
+     */
+    public void priceRangeSearch () {
+        boolean withinRange = false;
+        ArrayList<Integer> indices = new ArrayList<Integer>();
+        Scanner sc = new Scanner(System.in);
+        int lower,
+            higher,
+            counter = 0;
+        boolean invalid_range;
+
+        do {
+            System.out.println("Please enter the MINIMUM price threshold: ");
+            lower = Integer.parseInt(sc.nextLine());
+
+            System.out.println("Please enter the MAXIMUM price threshold: ");
+            higher = Integer.parseInt(sc.nextLine());
+
+            if (lower < 0 || higher < 0) {
+                invalid_range = true;
+                System.out.println("You have entered negative values for the price threshold(s), please try again ...");
+            }
+
+            if (lower > higher || higher < lower){
+                System.out.println("You have entered an invalid range, please try again...");
+                invalid_range = true;
+            }
+            else {
+                invalid_range = false;
+            }
+
+        } while (invalid_range);
+
+        for (int i = 0; i < vehicle_db.size(); ++i) {
+            if ((vehicle_db.get(i).getPrice() <= higher) && (vehicle_db.get(i).getPrice() >= lower)) {
+                indices.add(i);
+            }
+        }
+
+        for (int i = 0; i < indices.size(); ++i){
+            System.out.println(vehicle_db.get(indices.get(i)).getVIN()); // FIXME -- need to make it pretty!
+        }
+    }
+
+
 }

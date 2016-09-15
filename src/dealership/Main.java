@@ -43,6 +43,7 @@ public class Main {
 
         int option = sc.nextInt();
         boolean exit = false;
+        String query;
 
         while (option < SHOW_EXISTING_CAR_RECORDS || option > EXIT_PROGRAM){ // FIXME -- insert exception handling??
             System.out.print("\nYour selection ("+option+") is an invalid option." +
@@ -60,15 +61,20 @@ public class Main {
                 exit = false;
                 break;
             case DELETE_CAR:
-                //FIXME -- need funct
+                db.delByVIN();
                 exit = false;
                 break;
             case SEARCH_FOR_CAR_VIN:
-                //FIXME -- need funct
+                System.out.println("Please enter the 5 character VIN (Vehicle Identification Number) of the vehicle:");
+                query = sc.nextLine();
+
+                if (db.vehicleSearchByVIN(query)){
+                    //FIXME -- query user if they would like to search for another vehicle?
+                }
                 exit = false;
                 break;
             case SHOW_LIST_CARS_RANGE:
-                //FIXME -- need funct
+                db.priceRangeSearch();
                 exit = false;
                 break;
             case EXIT_PROGRAM:
@@ -92,5 +98,7 @@ public class Main {
             main.displayMenu();
             leave = main.selectOption();
         } while (!leave);
+
+        //FIXME -- need to call method exportVehicleData
     }
 }
