@@ -1,5 +1,6 @@
 package dealership;
 
+import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
@@ -18,7 +19,8 @@ public class database {
 
         try {
             fIn = new Scanner(new FileReader("cars.txt"));
-            String line = fIn.nextLine();
+
+            
 
 
         }
