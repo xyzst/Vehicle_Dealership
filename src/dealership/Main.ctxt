@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.params=
+comment0.target=void\ displayMenu()
+comment0.text=\n\ displayMenu\ method\ prints\ the\ menu\ to\ the\ system\ out.\ \n
+comment1.params=
+comment1.target=boolean\ selectOption()
+comment1.text=\n\ selectOption\ method\ takes\ user\ input\ to\ allow\ navigation\ of\ program\ menu.\ Returns\ boolean\ value\ \n\ when\ user\ desires\ to\ exit\ the\ program.\n\ \n\ @return\ exit\ Value\ is\ changed\ to\ true\ when\ user\ intends\ to\ terminate\ the\ program.\n
+comment2.params=args
+comment2.target=void\ main(java.lang.String[])
+comment2.text=\n\ Main\ method\ operates\ the\ program.\ The\ method\ throws\ an\ exception\ when\ an\ input\ error\ \n\ occurs.\ The\ method\ reads\ in\ input\ from\ a\ file\ to\ populate\ the\ database.\ When\ the\ \n\ program\ is\ terminated,\ the\ database\ is\ exported\ to\ a\ text\ file.\n\n\ @param\ \ args\ \ \ Takes\ command\ line\ arguments\ from\ user\n
+numComments=3
