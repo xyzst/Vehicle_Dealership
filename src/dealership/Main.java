@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * FIXME -- need description of class Main
+ * Main is the driver class establishing a user interface.
  *
  * @author Darren Rambaud (d_r273)
  * @author Nathan Easton (nle7)
@@ -21,9 +21,9 @@ public class Main {
                              
     private static database db = new database();
     private static Main main = new Main();
+    
     /**
-     * FIXME -- need description of method displayMenu
-     *
+     * displayMenu method prints the menu to the system out. 
      */
     private void displayMenu(){
         System.out.print("\n"+SHOW_EXISTING_CAR_RECORDS+". Show all existing car records in the database (in any order)." +
@@ -36,8 +36,10 @@ public class Main {
     }
 
     /**
-     * FIXME -- need description of method selectOption
-     *
+     * selectOption method takes user input to allow navigation of program menu. Returns boolean value 
+     * when user desires to exit the program.
+     * 
+     * @return exit Value is changed to true when user intends to terminate the program.
      */
     private boolean selectOption(){
         Scanner sc = new Scanner(System.in);
@@ -80,9 +82,11 @@ public class Main {
     }
 
     /**
-     * FIXME -- need description of method Main
+     * Main method operates the program. The method throws an exception when an input error 
+     * occurs. The method reads in input from a file to populate the database. When the 
+     * program is terminated, the database is exported to a text file.
      *
-     * @param  args   a sample parameter for a method
+     * @param  args   Takes command line arguments from user
      */
     public static void main (String[] args) throws IOException, Exception {
         boolean leave;
