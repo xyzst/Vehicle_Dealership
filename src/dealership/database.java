@@ -7,8 +7,11 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 /**
- * FIXME -- insert descipt for database class
- *
+ * database class stores dealership inventory in the form of Cars objects.
+ * 
+ * @author Darren Rambaud (d_r273)
+ * @author Nathan Easton (nle7)
+ * @version 9/20/2016
  */
 public class database {
     private static final int SIZE = 3,
@@ -17,12 +20,17 @@ public class database {
                              MODEL = 2,
                              YEAR = 3,
                              MILEAGE = 4,
+                             VIN_LENGTH = 5,
                              PRICE = 5;
+                             
     private static final String FILE_PATH = ("cars.txt");
     private ArrayList<Car> vehicle_db = new ArrayList<Car>(SIZE);
 
     /**
-     * FIXME -- need description
+     * importVehicleData is an ArrayList method which populates from a specified filepath. The 
+     * method throws an exception if the input file cannot be retrieved or utilized.
+     * 
+     * @return vehicle_db ArrayList variable holding inventory of Car objects
      */
     public ArrayList<Car> importVehicleData() throws IOException {
         Scanner source = null;
@@ -58,7 +66,8 @@ public class database {
     }
 
     /**
-     * FIXME -- add documentation to exportArrayList2File
+     * exportArrayList2File method creates a file, which prints the contents of the database (ArrayList) and 
+     * closes the created file. A message is printed to system out following completion.
      */
     public void exportArrayList2File() throws Exception {
         PrintWriter fOut = new PrintWriter(FILE_PATH);
@@ -66,7 +75,7 @@ public class database {
         for (int i = 0; i < vehicle_db.size(); ++i) {
             fOut.println(""+vehicle_db.get(i).getVIN()+" "+vehicle_db.get(i).getMake()+" " +
                     ""+vehicle_db.get(i).getModel()+" "+vehicle_db.get(i).getYear()+" " +
-                    ""+vehicle_db.get(i).getMileage()+" "+vehicle_db.get(i).getPrice()+"");
+                    ""+vehicle_db.get(i).getMileage()+" "+vehicle_db.get(i).getPrice()+""); //FIX ME: Format price 2 Decimal places
         }
 
         fOut.close();
@@ -74,62 +83,67 @@ public class database {
     }
 
     /**
-     *  FIXME -- insert description for displayInventory
+     *  displayInventory method prints the contents of the inventory stored in the database. If
+     *  the inventory is empty, then the user is notified by a message printed to system out.
      */
     public void displayInventory (){
-        System.out.print("\n");
+        System.out.print("\n==============================================================================\n");
 
         if (vehicle_db.isEmpty()){
             System.out.println("The vehicle inventory is empty.");
         }
         else {
-            for (int i = 0; i < vehicle_db.size(); ++i) { // FIXME -- need to continue displaying rest of data and making it pretty
-                System.out.println(vehicle_db.get(i).getVIN());
+            for (int i = 0; i < vehicle_db.size(); ++i) {    
+                System.out.println("\n|  "+vehicle_db.get(i).getVIN()+" "+vehicle_db.get(i).getMake()+" " +
+                    ""+vehicle_db.get(i).getModel()+" "+vehicle_db.get(i).getYear()+" " +
+                    ""+vehicle_db.get(i).getMileage()+" "+vehicle_db.get(i).getPrice()+""); //FIX ME: Format price 2 Decimal places
             }
         }
+        System.out.print("\n==============================================================================\n");
     }
 
     /**
-     * FIXME -- insert description for addNewVehicle
+     * addNewVehicle method allows a user to manually create a Car object and add it to the database. The method 
+     * checks for correct user input for various fields of a Car object.
      */
     public void addNewVehicle(){
         Scanner in = new Scanner(System.in);
         Car temp = new Car();
 
-        int query_int;
-        String query_str;
-        char query_char;
+        int query_int; 
+        String query_str; 
         float query_float;
         boolean too_long,
                 negative_value;
 
         do {
-            System.out.println("Please enter the 5 character VIN (Vehicle Identification Number) of the vehicle:");
+            System.out.println("\nPlease enter the 5 character VIN (Vehicle Identification Number) of the vehicle: ");
             query_str = in.nextLine();
 
-            if (query_str.length() > 5 || query_str.length() < 5) { //FIXME - need to get rid of literal
-                System.out.println("ERROR: Invalid VIN entered, please try again...");
+            if (query_str.length() != VIN_LENGTH ) { 
+                System.out.println("\nERROR: Invalid VIN entered, please try again...\n");
                 too_long = true;
             }
             else {
                 too_long = false;
             }
         } while (too_long);
-        // FIXME -- could reuse VIN search code here??
-        temp.setVIN(query_str.toUpperCase());
+        temp.setVIN(query_str.toUpperCase()); //Maintain continuity among user inputs
 
-        System.out.println("Please enter the make of the vehicle (eg, Toyota, Honda, Ford ...):");
-        temp.setMake(in.nextLine());
+        System.out.println("\nPlease enter the make of the vehicle (eg, Toyota, Honda, Ford ...): ");
+        query_str = in.nextLine();
+        temp.setMake(query_str.toUpperCase());//Maintain continuity among user inputs
 
-        System.out.println("Please enter the model of the vehicle (eg, S200, F-150, Yaris ...):");
-        temp.setModel(in.nextLine());
+        System.out.println("\nPlease enter the model of the vehicle (eg, S200, F-150, Yaris ...): ");
+        query_str = in.nextLine();
+        temp.setModel(query_str.toUpperCase());//Maintain continuity among user inputs
 
         do {
-            System.out.println("Please enter the vehicle's model year (eg, 2016, 2010, 1999, ...):");
+            System.out.println("\nPlease enter the vehicle's model year (eg, 2016, 2010, 1999, ...): 1");
             query_int = Integer.parseInt(in.nextLine());
 
-            if (query_int < 0) {
-                System.out.println("ERROR: Invalid model year entered, please try again...");
+            if (query_int < 1900 || query_int > 2017) {
+                System.out.println("\nERROR: Invalid model year entered, please try again...");
                 negative_value = true;
             }
             else{
@@ -139,11 +153,11 @@ public class database {
         temp.setYear(query_int);
 
         do {
-            System.out.println("Please enter the vehicle's mileage (eg, 50000, 25343, 12345, ...):");
+            System.out.println("\nPlease enter the vehicle's mileage (eg, 50000, 25343, 12345, ...):");
             query_int = Integer.parseInt(in.nextLine());
 
-            if (query_int < 0) {
-                System.out.println("ERROR: Invalid mileage entered, please try again...");
+            if (query_int < 0 || query_int > 500000) {
+                System.out.println("\nERROR: Invalid mileage entered, please try again...");
                 negative_value = true;
             }
             else{
@@ -153,11 +167,11 @@ public class database {
         temp.setMileage(query_int);
 
         do {
-            System.out.println("Please enter the price of the vehicle (eg, 50000, 69999.99, 12500, ...):");
+            System.out.println("\nPlease enter the price of the vehicle (eg, 50000, 69999.99, 12500, ...):");
             query_float = Float.parseFloat(in.nextLine());
 
-            if (query_float < 0) {
-                System.out.println("ERROR: Invalid vehicle price entered, please try again...");
+            if (query_float <= 0) {
+                System.out.println("\nERROR: Invalid vehicle price entered, please try again...");
                 negative_value = true;
             }
             else{
@@ -167,31 +181,35 @@ public class database {
         temp.setPrice(query_float);
 
         vehicle_db.add(temp);
-        System.out.println("The vehicle (VIN: "+temp.getVIN()+", Make: "+temp.getMake()+", " +
+        System.out.println("\nThe vehicle: \n\n(VIN: "+temp.getVIN()+", Make: "+temp.getMake()+", " +
                            "Model: "+temp.getModel()+", Year: "+temp.getYear()+", Mileage: "+temp.getMileage()+", " +
-                           "Price: $"+temp.getPrice()+") has been successfully added to the inventory list!");
+                           "Price: $"+temp.getPrice()+") \n\nhas been successfully added to the inventory list!"); //FIX ME: OUTPUT ALIGNMENT, !!!PRICE IN TWO DECIMAL DIGITS!!!
     }
 
     /**
-     * FIXME -- insert documentation
+     * delByVIN method allows user to seek a Car object by searching for the VIN number and delete 
+     * that object from the inventory. The method checks for correct user input format. If the Car 
+     * object is found the user is notified of successful removal. Otherwise, the user is informed 
+     * if the object is not found nor successfully removed.
      */
     public void delByVIN () {
         Scanner in = new Scanner(System.in);
         String query;
         boolean found = false,
-                too_long;
-
-        System.out.println("Please enter the VIN of the vehicle you wish to remove:");
-        query = in.nextLine();
+                invalid;
 
         do {
-            if (query.length() > 5 || query.length() < 5) { //FIXME - need to get rid of literal
-                System.out.println("ERROR: Invalid VIN entered, please try again...");
-                too_long = true;
+            displayInventory();
+            System.out.println("\nPlease enter the VIN of the vehicle you wish to remove:");
+            query = in.nextLine();
+            
+            if (query.length() != VIN_LENGTH) { 
+                System.out.println("\nERROR: Invalid VIN entered, please try again...");
+                invalid = true;
             } else {
-                too_long = false;
+                invalid = false;
             }
-        } while (too_long);
+        } while (invalid);
 
         for (int i = 0; i < vehicle_db.size(); ++i) {
              if (query.equalsIgnoreCase(vehicle_db.get(i).getVIN())){
@@ -205,66 +223,82 @@ public class database {
         }
 
         if (found) {
-            System.out.println("Vehicle has been successfully removed!");
+            System.out.println("\nVehicle has been successfully removed!");
         }
         else {
-            System.out.println("Vehicle not found in the inventory list.");
+            System.out.println("\nVehicle not found in the inventory list.");
         }
     }
 
     /**
-     * FIXME -- insert description for vehicleSearchByVIN
+     * vehicleSearchByVIN method allows a user to view a Car object within the inventory by searching
+     * for a specific VIN number. The method checks for correct user input format. If the object is
+     * found, the object is displayed on system out. If the object is not found in the database, 
+     * the user is notified.
      */
-    public boolean vehicleSearchByVIN (String VIN) {
-        boolean doesExist = false;
-        int index;
+    public void vehicleSearchByVIN () {
+        Scanner in = new Scanner(System.in);
+        boolean doesExist = false,
+                invalid;
+        String query;
+        
+        do {
+            displayInventory();
+            System.out.println("\nPlease enter the 5-digit VIN of the vehicle you wish to view:");
+            query = in.nextLine();
+            
+            if (query.length() != VIN_LENGTH) { 
+                System.out.println("\nERROR: Invalid VIN format entered, please try again...");
+                invalid = true;
+            } else {
+                invalid = false;
+            }
+        } while (invalid);
 
         for (int i = 0; i < vehicle_db.size(); ++i) {
-            if (VIN.equalsIgnoreCase(vehicle_db.get(i).getVIN())){
+            if (query.equalsIgnoreCase(vehicle_db.get(i).getVIN())){
+                System.out.print("\n==============================================================================\n");
+                System.out.println("\n|  "+vehicle_db.get(i).getVIN()+" "+vehicle_db.get(i).getMake()+" " +
+                    ""+vehicle_db.get(i).getModel()+" "+vehicle_db.get(i).getYear()+" " +
+                    ""+vehicle_db.get(i).getMileage()+" "+vehicle_db.get(i).getPrice()+""); ////FIX ME: Format price 2 Decimal places
+                System.out.print("\n==============================================================================\n");
                 doesExist = true;
-                index = i;
                 break;
-            }
-            else {
-                doesExist = false;
-            }
+             }
         }
-
-        if (doesExist) {
-            System.out.println(""+VIN+" does not exist in the vehicle inventory.");
-        }
-        else{
-            //FIXME -- insert details of vehicle found here (use index variable)...
-        }
-        return doesExist;
+        
+        if (!doesExist)
+            System.out.println("\nSorry, the VIN #"+query+", does not exist in this vehicle inventory.\n");
     }
 
     /**
-     * FIXME -- insert description for priceSearch
+     * priceRangeSearch method allows a user to establish a price range, which allows the user to view only Car
+     * objects that meet the specified criteria. The method ensures logical price range boundaries. The method 
+     * creates an ArrayList 'rangeList' that stores the qualified Car objects. rangeList is printed displaying to 
+     * the user desired matches. If there are no matches, the user is notified by a message to system out. 
      */
     public void priceRangeSearch () {
         boolean withinRange = false;
-        ArrayList<Integer> indices = new ArrayList<Integer>();
+        ArrayList<Car> rangeList = new ArrayList<Car>();
         Scanner sc = new Scanner(System.in);
         int lower,
-            higher,
-            counter = 0;
+            higher;
         boolean invalid_range;
 
         do {
-            System.out.println("Please enter the MINIMUM price threshold: ");
+            System.out.println("\nPlease enter the MINIMUM price threshold: ");
             lower = Integer.parseInt(sc.nextLine());
 
-            System.out.println("Please enter the MAXIMUM price threshold: ");
+            System.out.println("\nPlease enter the MAXIMUM price threshold: ");
             higher = Integer.parseInt(sc.nextLine());
 
             if (lower < 0 || higher < 0) {
                 invalid_range = true;
-                System.out.println("You have entered negative values for the price threshold(s), please try again ...");
+                System.out.println("\nYou have entered negative values for the price threshold(s), please try again ...");
             }
 
             if (lower > higher || higher < lower){
-                System.out.println("You have entered an invalid range, please try again...");
+                System.out.println("\nYou have entered an invalid range, please try again...");
                 invalid_range = true;
             }
             else {
@@ -275,12 +309,24 @@ public class database {
 
         for (int i = 0; i < vehicle_db.size(); ++i) {
             if ((vehicle_db.get(i).getPrice() <= higher) && (vehicle_db.get(i).getPrice() >= lower)) {
-                indices.add(i);
+                rangeList.add(vehicle_db.get(i));
+                withinRange = true;
             }
         }
+        
+        if (!withinRange)
+            System.out.println("\nSorry, there are no vehicle matches between price range: $" +lower+ " - $" +higher+ "in our inventory\n");
+   
+        else{    
+        System.out.print("\n==============================================================================\n");
 
-        for (int i = 0; i < indices.size(); ++i){
-            System.out.println(vehicle_db.get(indices.get(i)).getVIN()); // FIXME -- need to make it pretty!
+        for (int i = 0; i < rangeList.size(); ++i){
+            System.out.println("\n|  "+rangeList.get(i).getVIN()+" "+rangeList.get(i).getMake()+" " +
+                    ""+rangeList.get(i).getModel()+" "+rangeList.get(i).getYear()+" " +
+                    ""+rangeList.get(i).getMileage()+" "+rangeList.get(i).getPrice()+""); //FIX ME: Format price 2 Decimal places
+        }
+        
+        System.out.print("\n==============================================================================\n");
         }
     }
 
