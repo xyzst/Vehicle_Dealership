@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @author Nathan Easton (nle7)
  * @version 9/20/2016
  */
-class database {
+public class database {
     private static final int SIZE = 3,
                              VIN = 0,
                              MAKE = 1,
@@ -98,7 +98,7 @@ class database {
      * @throws IOException thrown if "cars.txt" does not exist
      * @throws NumberFormatException thrown if Integer.parseInt attempts to parse a non-integer String
      */
-    boolean importVehicleData() throws IOException, NumberFormatException {
+    public boolean importVehicleData() throws IOException, NumberFormatException {
         Scanner source = null;
         boolean successful = false;
 
@@ -136,7 +136,7 @@ class database {
      * exportArrayList2File method creates a file, which prints the contents of the database (ArrayList) and 
      * closes the created file. A message is printed to system out following completion.
      */
-    void exportArrayList2File() throws Exception {
+    public void exportArrayList2File() throws Exception {
         PrintWriter fOut = new PrintWriter(FILE_PATH);
         float price;
 
@@ -158,7 +158,7 @@ class database {
      *  displayInventory method prints the contents of the inventory stored in the database. If
      *  the inventory is empty, then the user is notified by a message printed to system out.
      */
-    void displayInventory (){
+    public void displayInventory (){
         printSeparatorLine();
         printHeaderLine();
         if (vehicle_db.isEmpty()){
@@ -178,7 +178,7 @@ class database {
      * same VIN cannot exist in ArrayList vehicle_db. In the case of an already existing VIN, the program returns and
      * exits the function.
      */
-    void addNewVehicle(){
+    public void addNewVehicle(){
         Scanner in = new Scanner(System.in);
         Car temp = new Car();
 
@@ -288,7 +288,7 @@ class database {
      * object is found the user is notified of successful removal. Otherwise, the user is informed 
      * if the object is not found nor successfully removed.
      */
-    void delByVIN () {
+    public void delByVIN () {
         Scanner in = new Scanner(System.in);
         String query;
         boolean found = false,
@@ -336,7 +336,7 @@ class database {
      * vehicleSearchByVIN method linearly iterates through the vehicle_db ArrayList. Upon the first String match, the
      * loop breaks and outputs the matching vehicle's data with the appropriate headers.
      */
-    boolean vehicleSearchByVIN (String VIN, boolean ignoreScreenOutput) {
+    public boolean vehicleSearchByVIN (String VIN, boolean ignoreScreenOutput) {
         boolean doesExist = false;
 
         /*for (int i = 0; i < vehicle_db.size(); ++i) { // FIXME -- equivalent to foreach loop below
@@ -387,7 +387,7 @@ class database {
      * utilizes an ArrayList of Integers named "indices" in order to dynamically store the index of the Car objects stored
      * in vehicle_db. Once the search is complete, the appropriate output is displayed to the screen.
      */
-    void priceRangeSearch () {
+    public void priceRangeSearch () {
         boolean withinRange = false;
 
         ArrayList<Integer> indices = new ArrayList<>();

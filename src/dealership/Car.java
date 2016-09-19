@@ -7,7 +7,7 @@ package dealership;
  * @author Nathan Easton (nle7)
  * @version 9/19/2016
  */
-class Car {
+public class Car {
     private String VIN,
                    make,
                    model;
@@ -38,41 +38,50 @@ class Car {
     }
     
     /**
-     * Sets VIN field for Car object.
+     * Sets VIN field for Car object as specified by VIN
+     *
+     * @param VIN is a String
      */
-    void setVIN (String VIN) {
+    public void setVIN (String VIN) {
         this.VIN = VIN;
     }
     
     /**
-     * Sets make field for Car object.
+     * Sets make field for Car object as specified by make
+     * @param make is a String
      */
-    void setMake (String make) {
+    public void setMake (String make) {
         this.make = make;
     }
 
     /**
      * Sets model field for Car object.
+     * @param model is a String
      */
-    void setModel (String model) {
+    public void setModel (String model) {
         this.model = model;
     }
 
-    void setYear (int year) {
+    /**
+     * Mutator for the class variable year
+     * @param year is an int
+     */
+    public void setYear (int year) {
         this.year = year;
     }
     
     /**
      * Sets mileage for Car object.
      */
-    void setMileage (int mileage) {
+    public void setMileage (int mileage) {
         this.mileage = mileage;
     }
     
     /**
      * Sets price field for Car object.
+     * @param price is a float
      */
-    void setPrice (float price) {
+    public void setPrice (float price) {
         this.price = price;
     }
     
@@ -81,16 +90,16 @@ class Car {
      * 
      * @return VIN Value for VIN field
      */
-    String getVIN () {
+    public String getVIN () {
         return this.VIN;
     }
     
     /**
      * Returns Make field for Car object.
      * 
-     * @return make Value for Make field
+     * @return Make, a string, for make field
      */
-    String getMake () {
+    public String getMake () {
         return this.make;
     }
     
@@ -99,7 +108,7 @@ class Car {
      * 
      * @return model Value for Model field
      */
-    String getModel () {
+    public String getModel () {
         return this.model;
     }
     
@@ -108,7 +117,7 @@ class Car {
      * 
      * @return year Value for Year field
      */
-    int getYear () {
+    public int getYear () {
         return this.year;
     }
     
@@ -117,16 +126,16 @@ class Car {
      * 
      * @return mileage Value for Mileage field
      */
-    int getMileage () {
+    public int getMileage () {
         return this.mileage;
     }
     
     /**
      * Returns Price field for Car object.
      * 
-     * @return price Value for Price field
+     * @return price Value for Price field, a float
      */
-    float getPrice () {
+    public float getPrice () {
         return this.price;
     }
 }
