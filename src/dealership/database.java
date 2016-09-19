@@ -85,7 +85,9 @@ public class database {
      * importVehicleData is an ArrayList method which populates from a specified filepath. The 
      * method throws an exception if the input file cannot be retrieved or utilized.
      * 
-     * @return successful which is a boolean. A false is returned if an exception is thrown
+     * @return successful which is a boolean. A false is returned if IOException is thrown
+     * @throws IOException
+     * @throws NumberFormatException
      */
     public boolean importVehicleData() throws IOException, NumberFormatException {
         Scanner source = null;
@@ -276,6 +278,11 @@ public class database {
         String query;
         boolean found = false,
                 invalid;
+
+        if (vehicle_db.isEmpty()) { // cannot remove from an empty ArrayList
+            System.err.print("The database is currently empty, now returning to the main menu...");
+            return;
+        }
 
         do {
             displayInventory();
