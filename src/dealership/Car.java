@@ -1,6 +1,13 @@
 package dealership;
 
-public class Car {
+/**
+ * Car is a class for objects of Car type.
+ * 
+ * @author Darren Rambaud (d_r273)
+ * @author Nathan Easton (nle7)
+ * @version 9/19/2016
+ */
+class Car {
     private String VIN,
                    make,
                    model;
@@ -9,17 +16,17 @@ public class Car {
     private float price;
 
     Car(){
-
     }
 
     /**
-     * FIXME -- insert description
-     * @param VIN
-     * @param make
-     * @param model
-     * @param year
-     * @param mileage
-     * @param price
+     * Constructor for Car class that initializes fields for a new Car object.
+     * 
+     * @param VIN initializes corresponding VIN number for Car object
+     * @param make initializes corresponding make for Car object
+     * @param model initializes corresponding model for Car object
+     * @param year initializes corresponding year for Car object
+     * @param mileage initializes corresponding mileage count for Car object
+     * @param price initializes corresponding cost for Car object
      */
     Car (String VIN, String make, String model, int year, int mileage, float price){
         this.VIN = VIN;
@@ -29,52 +36,97 @@ public class Car {
         this.mileage = mileage;
         this.price = price;
     }
-
-    public void setVIN (String VIN) {
+    
+    /**
+     * Sets VIN field for Car object.
+     */
+    void setVIN (String VIN) {
         this.VIN = VIN;
     }
-
-    public void setMake (String make) {
+    
+    /**
+     * Sets make field for Car object.
+     */
+    void setMake (String make) {
         this.make = make;
     }
 
-    public void setModel (String model) {
+    /**
+     * Sets model field for Car object.
+     */
+    void setModel (String model) {
         this.model = model;
     }
 
-    public void setYear (int year) {
+    void setYear (int year) {
         this.year = year;
     }
-
-    public void setMileage (int mileage) {
+    
+    /**
+     * Sets mileage for Car object.
+     */
+    void setMileage (int mileage) {
         this.mileage = mileage;
     }
-
-    public void setPrice (float price) {
+    
+    /**
+     * Sets price field for Car object.
+     */
+    void setPrice (float price) {
         this.price = price;
     }
-
-    public String getVIN () {
+    
+    /**
+     * Returns VIN field for Car object.
+     * 
+     * @return VIN Value for VIN field
+     */
+    String getVIN () {
         return this.VIN;
     }
-
-    public String getMake () {
+    
+    /**
+     * Returns Make field for Car object.
+     * 
+     * @return make Value for Make field
+     */
+    String getMake () {
         return this.make;
     }
-
-    public String getModel () {
+    
+    /**
+     * Returns Model field for Car object.
+     * 
+     * @return model Value for Model field
+     */
+    String getModel () {
         return this.model;
     }
-
-    public int getYear () {
+    
+    /**
+     * Returns Year field for Car object.
+     * 
+     * @return year Value for Year field
+     */
+    int getYear () {
         return this.year;
     }
-
-    public int getMileage () {
+    
+    /**
+     * Returns Mileage field for Car object.
+     * 
+     * @return mileage Value for Mileage field
+     */
+    int getMileage () {
         return this.mileage;
     }
-
-    public float getPrice () {
+    
+    /**
+     * Returns Price field for Car object.
+     * 
+     * @return price Value for Price field
+     */
+    float getPrice () {
         return this.price;
     }
 
