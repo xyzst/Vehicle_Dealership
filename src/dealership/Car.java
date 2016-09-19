@@ -129,7 +129,4 @@ class Car {
     float getPrice () {
         return this.price;
     }
-
-
-
 }
