@@ -21,19 +21,76 @@ public class database {
                              YEAR = 3,
                              MILEAGE = 4,
                              VIN_LENGTH = 5,
-                             PRICE = 5;
+                             PRICE = 5,
+                             FIELD_LEN = 13,
+                             NUM_HEADER_CHARS = 69;
+
+    private static final char HEADER_CHAR = '*';
+
+    private static final String STR_VIN = "VIN",
+                                STR_MAKE = "MAKE",
+                                STR_MODEL = "MODEL",
+                                STR_YEAR = "YEAR",
+                                STR_MILEAGE = "MILEAGE",
+                                STR_PRICE  = "PRICE (USD)";
                              
     private static final String FILE_PATH = ("cars.txt");
     private ArrayList<Car> vehicle_db = new ArrayList<Car>(SIZE);
 
     /**
+     * printSeparatorLine method simply iterates over a specified amount to output to the screen the separator line.
+     * The number of characters to output is determined by NUM_HEADER_CHARS and the header character is easily
+     * modified by editing HEADER_CHAR.
+     */
+    private void printSeparatorLine() {
+        System.out.print("\n");
+        for (int i = 0; i < NUM_HEADER_CHARS; ++i){
+            System.out.print(HEADER_CHAR);
+        }
+        System.out.print("\n");
+    }
+
+    /**
+     * printHeaderLine method prints the header (VIN, MAKE, MODEL, YEAR, MILEAGE, PRICE) to the screen. Able to easily
+     * add and delete headers, as needed, as well as modify the field length in order to accommodate changing requirements
+     * such as requiring a shorter or larger field length via FIELD_LEN + (an integer).
+     */
+    private void printHeaderLine () {
+        System.out.print(""+HEADER_CHAR+" ");
+        System.out.printf("%-"+(FIELD_LEN - 6)+"s", STR_VIN);
+        System.out.printf("%-"+FIELD_LEN+"s", STR_MAKE);
+        System.out.printf("%-"+FIELD_LEN+"s", STR_MODEL);
+        System.out.printf("%-"+(FIELD_LEN - 6)+"s", STR_YEAR);
+        System.out.printf("%-"+(FIELD_LEN - 2)+"s", STR_MILEAGE);
+        System.out.printf("%-"+(FIELD_LEN - 1)+"s   "+HEADER_CHAR+"", STR_PRICE);
+    }
+
+    /**
+     * printLineOfVehicleInfo iterates linearly through vehicle_db ArrayList, printing out the information contained in
+     * each Car object (eg, VIN, Make, Model, Year, Mileage ...).
+     */
+    private void printLineOfVehicleInfo() {
+        for (int i = 0; i < vehicle_db.size(); ++i) {
+            System.out.print("\n* ");
+            System.out.printf("%-" + (FIELD_LEN - 6) + "s", vehicle_db.get(i).getVIN());
+            System.out.printf("%-" + FIELD_LEN + "s", vehicle_db.get(i).getMake());
+            System.out.printf("%-" + FIELD_LEN + "s", vehicle_db.get(i).getModel());
+            System.out.printf("%-" + (FIELD_LEN - 6) + "d", vehicle_db.get(i).getYear());
+            System.out.printf("%-" + (FIELD_LEN - 2) + "d", vehicle_db.get(i).getMileage());
+            System.out.printf("$%-" + (FIELD_LEN - 1) + ".2f  "+HEADER_CHAR+"", vehicle_db.get(i).getPrice());
+        }
+    }
+
+    /**
      * importVehicleData is an ArrayList method which populates from a specified filepath. The 
      * method throws an exception if the input file cannot be retrieved or utilized.
      * 
-     * @return vehicle_db ArrayList variable holding inventory of Car objects
+     * @return successful which is a boolean. A false is returned if an exception is thrown
      */
-    public ArrayList<Car> importVehicleData() throws IOException {
+    public boolean importVehicleData() throws IOException, NumberFormatException {
         Scanner source = null;
+        boolean successful = false;
+
         try {
             source = new Scanner(new FileReader(FILE_PATH));
             String line;
@@ -52,17 +109,20 @@ public class database {
                 data.setPrice(Float.parseFloat(words[PRICE]));
                 vehicle_db.add(data);
             }
+            successful = true;
         }
         catch (IOException ex){
-            System.err.print(ex.getMessage());
-            System.out.println("\nERROR: \"cars.txt\" does NOT exist!");
+            System.err.println(ex.getMessage());
+            System.out.println("ERROR: \""+FILE_PATH+"\" does NOT exist!");
+
+            successful = false;
         }
         finally {
             if (source != null){
                 source.close();
             }
         }
-        return vehicle_db;
+        return successful;
     }
 
     /**
@@ -79,7 +139,6 @@ public class database {
         }
 
         fOut.close();
-        System.out.println("\nGoodbye!");
     }
 
     /**
@@ -87,19 +146,15 @@ public class database {
      *  the inventory is empty, then the user is notified by a message printed to system out.
      */
     public void displayInventory (){
-        System.out.print("\n==============================================================================\n");
-
+        printSeparatorLine();
+        printHeaderLine();
         if (vehicle_db.isEmpty()){
             System.out.println("The vehicle inventory is empty.");
         }
         else {
-            for (int i = 0; i < vehicle_db.size(); ++i) {    
-                System.out.println("\n|  "+vehicle_db.get(i).getVIN()+" "+vehicle_db.get(i).getMake()+" " +
-                    ""+vehicle_db.get(i).getModel()+" "+vehicle_db.get(i).getYear()+" " +
-                    ""+vehicle_db.get(i).getMileage()+" "+vehicle_db.get(i).getPrice()+""); //FIX ME: Format price 2 Decimal places
-            }
+            printLineOfVehicleInfo();
         }
-        System.out.print("\n==============================================================================\n");
+        printSeparatorLine();
     }
 
     /**
@@ -110,39 +165,53 @@ public class database {
         Scanner in = new Scanner(System.in);
         Car temp = new Car();
 
+        final int MODEL_YEAR_LOW = 1900,
+                  MODEL_YEAR_HI = 2017,
+                  MAXIMUM_MILEAGE_ALLOWED = 500000;
+
         int query_int; 
         String query_str; 
         float query_float;
-        boolean too_long,
-                negative_value;
+        boolean invalid,
+                negative_value,
+                alreadyExists = true;
+        final boolean IGNORE_OUTPUT = true;
 
         do {
             System.out.println("\nPlease enter the 5 character VIN (Vehicle Identification Number) of the vehicle: ");
             query_str = in.nextLine();
 
             if (query_str.length() != VIN_LENGTH ) { 
-                System.out.println("\nERROR: Invalid VIN entered, please try again...\n");
-                too_long = true;
+                System.out.println("\nERROR: Invalid VIN entered, please try again...");
+                invalid = true;
             }
             else {
-                too_long = false;
+                invalid = false;
+                alreadyExists = vehicleSearchByVIN(query_str, IGNORE_OUTPUT);
+                if (alreadyExists) {
+                    System.out.println("\nERROR: This VIN (#"+query_str+") already exists in the database!");
+                    System.out.println("If you wish to add another vehicle, please re-select this menu option" +
+                                       " from the main menu.");
+                    return;
+                }
             }
-        } while (too_long);
-        temp.setVIN(query_str.toUpperCase()); //Maintain continuity among user inputs
+        } while (invalid);
+
+        temp.setVIN(query_str.toUpperCase());
 
         System.out.println("\nPlease enter the make of the vehicle (eg, Toyota, Honda, Ford ...): ");
         query_str = in.nextLine();
-        temp.setMake(query_str.toUpperCase());//Maintain continuity among user inputs
+        temp.setMake(query_str.substring(0,1).toUpperCase() + query_str.substring(1).toLowerCase());
 
         System.out.println("\nPlease enter the model of the vehicle (eg, S200, F-150, Yaris ...): ");
         query_str = in.nextLine();
-        temp.setModel(query_str.toUpperCase());//Maintain continuity among user inputs
+        temp.setModel(query_str.substring(0,1).toUpperCase() + query_str.substring(1).toLowerCase());
 
         do {
             System.out.println("\nPlease enter the vehicle's model year (eg, 2016, 2010, 1999, ...): 1");
             query_int = Integer.parseInt(in.nextLine());
 
-            if (query_int < 1900 || query_int > 2017) {
+            if (query_int < MODEL_YEAR_LOW || query_int > MODEL_YEAR_HI) {
                 System.out.println("\nERROR: Invalid model year entered, please try again...");
                 negative_value = true;
             }
@@ -156,7 +225,7 @@ public class database {
             System.out.println("\nPlease enter the vehicle's mileage (eg, 50000, 25343, 12345, ...):");
             query_int = Integer.parseInt(in.nextLine());
 
-            if (query_int < 0 || query_int > 500000) {
+            if (query_int < 0 || query_int > MAXIMUM_MILEAGE_ALLOWED) {
                 System.out.println("\nERROR: Invalid mileage entered, please try again...");
                 negative_value = true;
             }
@@ -181,9 +250,19 @@ public class database {
         temp.setPrice(query_float);
 
         vehicle_db.add(temp);
-        System.out.println("\nThe vehicle: \n\n(VIN: "+temp.getVIN()+", Make: "+temp.getMake()+", " +
-                           "Model: "+temp.getModel()+", Year: "+temp.getYear()+", Mileage: "+temp.getMileage()+", " +
-                           "Price: $"+temp.getPrice()+") \n\nhas been successfully added to the inventory list!"); //FIX ME: OUTPUT ALIGNMENT, !!!PRICE IN TWO DECIMAL DIGITS!!!
+        System.out.println("\nThe following entry...");
+        printSeparatorLine();
+        printHeaderLine();
+        System.out.print("\n* ");
+        System.out.printf("%-"+(FIELD_LEN - 6)+"s", temp.getVIN());
+        System.out.printf("%-"+FIELD_LEN+"s", temp.getMake());
+        System.out.printf("%-"+FIELD_LEN+"s", temp.getModel());
+        System.out.printf("%-"+(FIELD_LEN - 6)+"d", temp.getYear());
+        System.out.printf("%-"+(FIELD_LEN - 2)+"d", temp.getMileage());
+        System.out.printf("$%-"+(FIELD_LEN - 1)+".2f  "+HEADER_CHAR+"", temp.getPrice());
+        printSeparatorLine();
+
+        System.out.println("\nhas been successfully added to the database!");
     }
 
     /**
@@ -236,39 +315,29 @@ public class database {
      * found, the object is displayed on system out. If the object is not found in the database, 
      * the user is notified.
      */
-    public void vehicleSearchByVIN () {
-        Scanner in = new Scanner(System.in);
-        boolean doesExist = false,
-                invalid;
-        String query;
-        
-        do {
-            displayInventory();
-            System.out.println("\nPlease enter the 5-digit VIN of the vehicle you wish to view:");
-            query = in.nextLine();
-            
-            if (query.length() != VIN_LENGTH) { 
-                System.out.println("\nERROR: Invalid VIN format entered, please try again...");
-                invalid = true;
-            } else {
-                invalid = false;
-            }
-        } while (invalid);
+    public boolean vehicleSearchByVIN (String VIN, boolean ignoreScreenOutput) {
+        boolean doesExist = false;
 
         for (int i = 0; i < vehicle_db.size(); ++i) {
-            if (query.equalsIgnoreCase(vehicle_db.get(i).getVIN())){
-                System.out.print("\n==============================================================================\n");
-                System.out.println("\n|  "+vehicle_db.get(i).getVIN()+" "+vehicle_db.get(i).getMake()+" " +
-                    ""+vehicle_db.get(i).getModel()+" "+vehicle_db.get(i).getYear()+" " +
-                    ""+vehicle_db.get(i).getMileage()+" "+vehicle_db.get(i).getPrice()+""); ////FIX ME: Format price 2 Decimal places
-                System.out.print("\n==============================================================================\n");
+            if (VIN.equalsIgnoreCase(vehicle_db.get(i).getVIN())) {
+                if (!ignoreScreenOutput) {
+                    System.out.print("\nVEHICLE FOUND! Please refer below ...");
+                    printSeparatorLine();
+                    printHeaderLine();
+                    System.out.print("\n* ");
+                    System.out.printf("%-"+(FIELD_LEN - 6)+"s", vehicle_db.get(i).getVIN());
+                    System.out.printf("%-"+FIELD_LEN+"s", vehicle_db.get(i).getMake());
+                    System.out.printf("%-"+FIELD_LEN+"s", vehicle_db.get(i).getModel());
+                    System.out.printf("%-"+(FIELD_LEN - 6)+"d", vehicle_db.get(i).getYear());
+                    System.out.printf("%-"+(FIELD_LEN - 2)+"d", vehicle_db.get(i).getMileage());
+                    System.out.printf("$%-"+(FIELD_LEN - 1)+".2f  "+HEADER_CHAR+"", vehicle_db.get(i).getPrice());
+                    printSeparatorLine();
+                }
                 doesExist = true;
                 break;
              }
         }
-        
-        if (!doesExist)
-            System.out.println("\nSorry, the VIN #"+query+", does not exist in this vehicle inventory.\n");
+        return doesExist;
     }
 
     /**
@@ -279,7 +348,8 @@ public class database {
      */
     public void priceRangeSearch () {
         boolean withinRange = false;
-        ArrayList<Car> rangeList = new ArrayList<Car>();
+        //ArrayList<Car> rangeList = new ArrayList<Car>(); FIXME -- wasteful of resources?
+        ArrayList<Integer> indices = new ArrayList<Integer>();
         Scanner sc = new Scanner(System.in);
         int lower,
             higher;
@@ -296,8 +366,7 @@ public class database {
                 invalid_range = true;
                 System.out.println("\nYou have entered negative values for the price threshold(s), please try again ...");
             }
-
-            if (lower > higher || higher < lower){
+            else if (lower > higher || higher < lower){
                 System.out.println("\nYou have entered an invalid range, please try again...");
                 invalid_range = true;
             }
@@ -309,26 +378,28 @@ public class database {
 
         for (int i = 0; i < vehicle_db.size(); ++i) {
             if ((vehicle_db.get(i).getPrice() <= higher) && (vehicle_db.get(i).getPrice() >= lower)) {
-                rangeList.add(vehicle_db.get(i));
+                indices.add(i);
                 withinRange = true;
             }
         }
         
-        if (!withinRange)
+        if (!withinRange) {
             System.out.println("\nSorry, there are no vehicle matches between price range: $" +lower+ " - $" +higher+ "in our inventory\n");
-   
-        else{    
-        System.out.print("\n==============================================================================\n");
-
-        for (int i = 0; i < rangeList.size(); ++i){
-            System.out.println("\n|  "+rangeList.get(i).getVIN()+" "+rangeList.get(i).getMake()+" " +
-                    ""+rangeList.get(i).getModel()+" "+rangeList.get(i).getYear()+" " +
-                    ""+rangeList.get(i).getMileage()+" "+rangeList.get(i).getPrice()+""); //FIX ME: Format price 2 Decimal places
         }
-        
-        System.out.print("\n==============================================================================\n");
+        else {
+            System.out.println("\nThe following vehicles match your desired criteria ($"+lower+" - $"+higher+")...");
+            printSeparatorLine();
+            printHeaderLine();
+            for (int i = 0; i < indices.size(); ++i) {
+                System.out.print("\n* ");
+                System.out.printf("%-" + (FIELD_LEN - 6) + "s", vehicle_db.get(indices.get(i)).getVIN());
+                System.out.printf("%-" + FIELD_LEN + "s", vehicle_db.get(indices.get(i)).getMake());
+                System.out.printf("%-" + FIELD_LEN + "s", vehicle_db.get(indices.get(i)).getModel());
+                System.out.printf("%-" + (FIELD_LEN - 6) + "d", vehicle_db.get(indices.get(i)).getYear());
+                System.out.printf("%-" + (FIELD_LEN - 2) + "d", vehicle_db.get(indices.get(i)).getMileage());
+                System.out.printf("$%-" + (FIELD_LEN - 1) + ".2f  "+HEADER_CHAR+"", vehicle_db.get(indices.get(i)).getPrice());
+            }
+            printSeparatorLine();
         }
     }
-
-
 }
