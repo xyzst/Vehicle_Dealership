@@ -138,6 +138,7 @@ class database {
      */
     void exportArrayList2File() throws Exception {
         PrintWriter fOut = new PrintWriter(FILE_PATH);
+        float price;
 
         /*for (int i = 0; i < vehicle_db.size(); ++i) { // FIXME -- equivalent to foreach loop below
             fOut.println(""+vehicle_db.get(i).getVIN()+" "+vehicle_db.get(i).getMake()+" " +
@@ -145,7 +146,9 @@ class database {
                     ""+vehicle_db.get(i).getMileage()+" "+vehicle_db.get(i).getPrice()+"");
         }*/
         for (Car i : vehicle_db) {
-            fOut.println(""+i.getVIN()+" "+i.getMake()+" "+i.getModel()+" "+i.getYear()+" "+i.getMileage()+" "+i.getPrice()+"");
+            fOut.printf(""+i.getVIN()+" "+i.getMake()+" "+i.getModel()+" "+i.getYear()+" "+i.getMileage()+" ");
+            price = i.getPrice();
+            fOut.format("%.2f%n", price);
         }
 
         fOut.close();
