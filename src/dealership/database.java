@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @author Nathan Easton (nle7)
  * @version 9/20/2016
  */
-public class database {
+class database {
     private static final int SIZE = 3,
                              VIN = 0,
                              MAKE = 1,
@@ -35,7 +35,7 @@ public class database {
                                 STR_PRICE  = "PRICE (USD)";
                              
     private static final String FILE_PATH = ("cars.txt");
-    private ArrayList<Car> vehicle_db = new ArrayList<Car>(SIZE);
+    private ArrayList<Car> vehicle_db = new ArrayList<>(SIZE);
 
     /**
      * printSeparatorLine method simply iterates over a specified amount to output to the screen the separator line.
@@ -70,7 +70,7 @@ public class database {
      * each Car object (eg, VIN, Make, Model, Year, Mileage ...).
      */
     private void printLineOfVehicleInfo() {
-        for (int i = 0; i < vehicle_db.size(); ++i) {
+        /*for (int i = 0; i < vehicle_db.size(); ++i) { // FIXME -- equivalent to foreach loop below
             System.out.print("\n* ");
             System.out.printf("%-" + (FIELD_LEN - 6) + "s", vehicle_db.get(i).getVIN());
             System.out.printf("%-" + FIELD_LEN + "s", vehicle_db.get(i).getMake());
@@ -78,6 +78,15 @@ public class database {
             System.out.printf("%-" + (FIELD_LEN - 6) + "d", vehicle_db.get(i).getYear());
             System.out.printf("%-" + (FIELD_LEN - 2) + "d", vehicle_db.get(i).getMileage());
             System.out.printf("$%-" + (FIELD_LEN - 1) + ".2f  "+HEADER_CHAR+"", vehicle_db.get(i).getPrice());
+        }*/
+        for (Car i : vehicle_db) {
+            System.out.print("\n* ");
+            System.out.printf("%-" + (FIELD_LEN - 6) + "s", i.getVIN());
+            System.out.printf("%-" + FIELD_LEN + "s", i.getMake());
+            System.out.printf("%-" + FIELD_LEN + "s", i.getModel());
+            System.out.printf("%-" + (FIELD_LEN - 6) + "d", i.getYear());
+            System.out.printf("%-" + (FIELD_LEN - 2) + "d", i.getMileage());
+            System.out.printf("$%-" + (FIELD_LEN - 1) + ".2f  "+HEADER_CHAR+"", i.getPrice());
         }
     }
 
@@ -86,10 +95,10 @@ public class database {
      * method throws an exception if the input file cannot be retrieved or utilized.
      * 
      * @return successful which is a boolean. A false is returned if IOException is thrown
-     * @throws IOException
-     * @throws NumberFormatException
+     * @throws IOException thrown if "cars.txt" does not exist
+     * @throws NumberFormatException thrown if Integer.parseInt attempts to parse a non-integer String
      */
-    public boolean importVehicleData() throws IOException, NumberFormatException {
+    boolean importVehicleData() throws IOException, NumberFormatException {
         Scanner source = null;
         boolean successful = false;
 
@@ -99,16 +108,12 @@ public class database {
             String[] words;
 
             while (source.hasNextLine()) {
-                Car data = new Car();
                 line = source.nextLine();
                 words = line.split(" ");
 
-                data.setVIN(words[VIN]);
-                data.setMake(words[MAKE]);
-                data.setModel(words[MODEL]);
-                data.setYear(Integer.parseInt(words[YEAR]));
-                data.setMileage(Integer.parseInt(words[MILEAGE]));
-                data.setPrice(Float.parseFloat(words[PRICE]));
+                Car data = new Car(words[VIN], words[MAKE], words[MODEL], Integer.parseInt(words[YEAR]),
+                                   Integer.parseInt(words[MILEAGE]), Float.parseFloat(words[PRICE]));
+
                 vehicle_db.add(data);
             }
             successful = true;
@@ -131,13 +136,16 @@ public class database {
      * exportArrayList2File method creates a file, which prints the contents of the database (ArrayList) and 
      * closes the created file. A message is printed to system out following completion.
      */
-    public void exportArrayList2File() throws Exception {
+    void exportArrayList2File() throws Exception {
         PrintWriter fOut = new PrintWriter(FILE_PATH);
 
-        for (int i = 0; i < vehicle_db.size(); ++i) {
+        /*for (int i = 0; i < vehicle_db.size(); ++i) { // FIXME -- equivalent to foreach loop below
             fOut.println(""+vehicle_db.get(i).getVIN()+" "+vehicle_db.get(i).getMake()+" " +
                     ""+vehicle_db.get(i).getModel()+" "+vehicle_db.get(i).getYear()+" " +
-                    ""+vehicle_db.get(i).getMileage()+" "+vehicle_db.get(i).getPrice()+""); //FIX ME: Format price 2 Decimal places
+                    ""+vehicle_db.get(i).getMileage()+" "+vehicle_db.get(i).getPrice()+"");
+        }*/
+        for (Car i : vehicle_db) {
+            fOut.println(""+i.getVIN()+" "+i.getMake()+" "+i.getModel()+" "+i.getYear()+" "+i.getMileage()+" "+i.getPrice()+"");
         }
 
         fOut.close();
@@ -147,11 +155,11 @@ public class database {
      *  displayInventory method prints the contents of the inventory stored in the database. If
      *  the inventory is empty, then the user is notified by a message printed to system out.
      */
-    public void displayInventory (){
+    void displayInventory (){
         printSeparatorLine();
         printHeaderLine();
         if (vehicle_db.isEmpty()){
-            System.out.println("The vehicle inventory is empty.");
+            System.out.print("\n"+HEADER_CHAR+"             ~ The vehicle inventory is empty ~                    "+HEADER_CHAR+"");
         }
         else {
             printLineOfVehicleInfo();
@@ -161,9 +169,13 @@ public class database {
 
     /**
      * addNewVehicle method allows a user to manually create a Car object and add it to the database. The method 
-     * checks for correct user input for various fields of a Car object.
+     * checks for correct user input for various fields of a Car object. Additionally, the method makes a call to
+     * vehicleSearchByVIN with the the second argument set to false (to ignore console output) to determine if the VIN
+     * is already in the database. The assumption here is that the VIN is a unique identifier and therefore 2 of the
+     * same VIN cannot exist in ArrayList vehicle_db. In the case of an already existing VIN, the program returns and
+     * exits the function.
      */
-    public void addNewVehicle(){
+    void addNewVehicle(){
         Scanner in = new Scanner(System.in);
         Car temp = new Car();
 
@@ -176,7 +188,7 @@ public class database {
         float query_float;
         boolean invalid,
                 negative_value,
-                alreadyExists = true;
+                alreadyExists;
         final boolean IGNORE_OUTPUT = true;
 
         do {
@@ -231,7 +243,7 @@ public class database {
                 System.out.println("\nERROR: Invalid mileage entered, please try again...");
                 negative_value = true;
             }
-            else{
+            else {
                 negative_value = false;
             }
         } while (negative_value);
@@ -273,18 +285,19 @@ public class database {
      * object is found the user is notified of successful removal. Otherwise, the user is informed 
      * if the object is not found nor successfully removed.
      */
-    public void delByVIN () {
+    void delByVIN () {
         Scanner in = new Scanner(System.in);
         String query;
         boolean found = false,
                 invalid;
 
         if (vehicle_db.isEmpty()) { // cannot remove from an empty ArrayList
-            System.err.print("The database is currently empty, now returning to the main menu...");
+            System.err.println("The database is currently empty, now returning to the main menu...");
             return;
         }
 
         do {
+            System.out.print("\nList of vehicle(s) in the database:");
             displayInventory();
             System.out.println("\nPlease enter the VIN of the vehicle you wish to remove:");
             query = in.nextLine();
@@ -317,15 +330,13 @@ public class database {
     }
 
     /**
-     * vehicleSearchByVIN method allows a user to view a Car object within the inventory by searching
-     * for a specific VIN number. The method checks for correct user input format. If the object is
-     * found, the object is displayed on system out. If the object is not found in the database, 
-     * the user is notified.
+     * vehicleSearchByVIN method linearly iterates through the vehicle_db ArrayList. Upon the first String match, the
+     * loop breaks and outputs the matching vehicle's data with the appropriate headers.
      */
-    public boolean vehicleSearchByVIN (String VIN, boolean ignoreScreenOutput) {
+    boolean vehicleSearchByVIN (String VIN, boolean ignoreScreenOutput) {
         boolean doesExist = false;
 
-        for (int i = 0; i < vehicle_db.size(); ++i) {
+        /*for (int i = 0; i < vehicle_db.size(); ++i) { // FIXME -- equivalent to foreach loop below
             if (VIN.equalsIgnoreCase(vehicle_db.get(i).getVIN())) {
                 if (!ignoreScreenOutput) {
                     System.out.print("\nVEHICLE FOUND! Please refer below ...");
@@ -343,20 +354,40 @@ public class database {
                 doesExist = true;
                 break;
              }
+        }*/
+
+        for (Car i : vehicle_db) {
+            if (VIN.equalsIgnoreCase(i.getVIN())) {
+                if (!ignoreScreenOutput) {
+                    System.out.print("\nVEHICLE FOUND! Please refer below ...");
+                    printSeparatorLine();
+                    printHeaderLine();
+                    System.out.print("\n* ");
+                    System.out.printf("%-"+(FIELD_LEN - 6)+"s", i.getVIN());
+                    System.out.printf("%-"+FIELD_LEN+"s", i.getMake());
+                    System.out.printf("%-"+FIELD_LEN+"s", i.getModel());
+                    System.out.printf("%-"+(FIELD_LEN - 6)+"d", i.getYear());
+                    System.out.printf("%-"+(FIELD_LEN - 2)+"d", i.getMileage());
+                    System.out.printf("$%-"+(FIELD_LEN - 1)+".2f  "+HEADER_CHAR+"", i.getPrice());
+                    printSeparatorLine();
+                }
+                doesExist = true;
+                break;
+            }
         }
         return doesExist;
     }
 
     /**
      * priceRangeSearch method allows a user to establish a price range, which allows the user to view only Car
-     * objects that meet the specified criteria. The method ensures logical price range boundaries. The method 
-     * creates an ArrayList 'rangeList' that stores the qualified Car objects. rangeList is printed displaying to 
-     * the user desired matches. If there are no matches, the user is notified by a message to system out. 
+     * objects that meet the specified criteria. The method ensures logical price range boundaries. The method
+     * utilizes an ArrayList of Integers named "indices" in order to dynamically store the index of the Car objects stored
+     * in vehicle_db. Once the search is complete, the appropriate output is displayed to the screen.
      */
-    public void priceRangeSearch () {
+    void priceRangeSearch () {
         boolean withinRange = false;
-        //ArrayList<Car> rangeList = new ArrayList<Car>(); FIXME -- wasteful of resources?
-        ArrayList<Integer> indices = new ArrayList<Integer>();
+
+        ArrayList<Integer> indices = new ArrayList<>();
         Scanner sc = new Scanner(System.in);
         int lower,
             higher;
@@ -397,14 +428,14 @@ public class database {
             System.out.println("\nThe following vehicles match your desired criteria ($"+lower+" - $"+higher+")...");
             printSeparatorLine();
             printHeaderLine();
-            for (int i = 0; i < indices.size(); ++i) {
+            for (int i = 0; i < indices.size(); ++i) { //FIXME -- can't be converted to foreach loop?
                 System.out.print("\n* ");
                 System.out.printf("%-" + (FIELD_LEN - 6) + "s", vehicle_db.get(indices.get(i)).getVIN());
                 System.out.printf("%-" + FIELD_LEN + "s", vehicle_db.get(indices.get(i)).getMake());
                 System.out.printf("%-" + FIELD_LEN + "s", vehicle_db.get(indices.get(i)).getModel());
-                System.out.printf("%-" + (FIELD_LEN - 6) + "d", vehicle_db.get(indices.get(i)).getYear());
-                System.out.printf("%-" + (FIELD_LEN - 2) + "d", vehicle_db.get(indices.get(i)).getMileage());
-                System.out.printf("$%-" + (FIELD_LEN - 1) + ".2f  "+HEADER_CHAR+"", vehicle_db.get(indices.get(i)).getPrice());
+                System.out.printf("%-" + (FIELD_LEN - 6) + "d", vehicle_db.get(indices.get(i)).getYear()); // these lines
+                System.out.printf("%-" + (FIELD_LEN - 2) + "d", vehicle_db.get(indices.get(i)).getMileage()); // give
+                System.out.printf("$%-" + (FIELD_LEN - 1) + ".2f  "+HEADER_CHAR+"", vehicle_db.get(indices.get(i)).getPrice()); // problems
             }
             printSeparatorLine();
         }

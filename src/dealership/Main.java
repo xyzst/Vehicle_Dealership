@@ -11,7 +11,7 @@ import java.util.Scanner;
  * @version 9/20/2016
  */
 public class Main {
-    private static final int SHOW_EXISTING_CAR_RECORDS = 1, // FIXME -- need to add documentation? Revise placement?
+    private static final int SHOW_EXISTING_CAR_RECORDS = 1,
                              ADD_NEW_CAR = 2,
                              DELETE_CAR = 3,
                              SEARCH_FOR_CAR_VIN = 4,
@@ -74,7 +74,6 @@ public class Main {
                 pressEnter2Continue();
                 break;
             case DELETE_CAR:
-                System.out.print("\nList of vehicle(s) in the database:");
                 db.delByVIN();
                 exit = false;
                 pressEnter2Continue();
@@ -83,7 +82,7 @@ public class Main {
                 System.out.println("\nProceeding to search for a vehicle by VIN# ...");
                 String search;
                 final boolean IGNORE_OUTPUT = false;
-                boolean invalid = false;
+                boolean invalid;
 
                 sc.nextLine(); // consuming newline character
                 do {
@@ -128,6 +127,8 @@ public class Main {
      * program is terminated, the database is exported to a text file.
      *
      * @param  args   Takes command line arguments from user
+     * @throws IOException when there is bad input such as a String to Integer during menu input
+     * @throws Exception catch all
      */
     public static void main (String[] args) throws IOException, Exception {
         boolean leave,
